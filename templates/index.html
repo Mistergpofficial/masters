@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI POWERED CHATBOT</title>
+    <!-- Link to external CSS file -->
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='styles.css') }}">
+</head>
+
+<body>
+    <header>
+        <h1>AI POWERED CHATBOT</h1>
+    </header>
+
+    <main>
+        <p>This app allows you to ask questions related to the content of the HR Policy documents. The app uses OpenAI's ChatGPT model to assist you in answering your questions about your company policy documents and FAQ.</p>
+
+        {% if not session['consent_acknowledged'] %}
+            <!-- consent form HTML here -->
+            <div id="consent-section">
+                <h2>Informed Consent</h2>
+                <p>This prototype chatbot is designed to measure its effectiveness in answering correctly HR-related questions...</p>
+                <p>Please read and acknowledge the following terms before proceeding:</p>
+                <ol>
+                    <li>The chatbot is a prototype for research purposes only.</li>
+                    <li>Your interactions and feedback will be collected anonymously.</li>
+                    <li>The chatbot may not always provide accurate or reliable information.</li>
+                    <li>Do not provide sensitive or confidential information.</li>
+                </ol>
+                <!-- consent form HTML here -->
+                <button onclick="acknowledgeConsent()">I acknowledge and agree to the terms</button>
+            </div>
+        {% else %}
+            <div id="chatbot-section">
+                <h2>You have agreed to participate. You can now interact with the chatbot.</h2>
+                <!-- display the knowledgebase status -->
+                {{ os.getenv("openai_api_key") }}
+                <p>Openai{{ openai }}</p>
+                <p>Knowledgebase Status: {{ session['knowledgebase_status'] }}</p>
+
+                {% with messages = get_flashed_messages(with_categories=true) %}
+                    {% if messages %}
+                        {% for category, message in messages %}
+                            <div class="alert alert-{{ category }}">
+                                {{ message }}
+                            </div>
+                        {% endfor %}
+                    {% endif %}
+                {% endwith %}
+
+                <!-- chatbot form here -->
+                <form id="chatbot-form">
+                    <label for="query_text">Question:</label>
+                    <p>Openai{{ openai }}</p>
+                    <textarea id="query_text" name="query_text" placeholder="Type your question here..." rows="4"></textarea>
+                    <br>
+                    <button type="button" id="ask_button" onclick="askChatbot()">Ask Chatbot</button>
+                    <a href="{{ url_for('download_transcript') }}" id="download_button" class="btn btn-primary download-link">Download Transcript</a>
+
+                    <div id="response"></div>
+                    <!-- Effectiveness Ratings here -->
+
+                    <div id="rating-section" style="display: none; text-align: center; margin-top: 20px;">
+                        <input type="hidden" name="visit_id" id="visit_id" value="">
+                        <input type="hidden" name="last_inserted_id" id="last_inserted_id" value="">
+                        <p style="font-weight: bold;">Rate the quality of the answer received:</p>
+                        <div class="rating" data-rating="0" style="font-size: 24px; color: #ffd700; margin-bottom: 10px;">
+                            <a href="#" class="star" onclick="setRating(1, event)">★</a>1
+                            <a href="#" class="star" onclick="setRating(2, event)">★</a>2
+                            <a href="#" class="star" onclick="setRating(3, event)">★</a>3
+                            <a href="#" class="star" onclick="setRating(4, event)">★</a>4
+                            <a href="#" class="star" onclick="setRating(5, event)">★</a>5
+                        </div>
+                    </div>
+
+                    <!-- Ease of use Ratings here -->
+                    <div id="ease-of-use-section" style="text-align: center; margin-top: 20px; display: none;">
+                        <p style="font-weight: bold;">Rate the ease of use:</p>
+                        <div class="ease_rating" data-rating="0" style="font-size: 24px; color: #ffd700; margin-bottom: 10px;">
+                            <a href="#" class="star" onclick="setEaseOfUseRating(1, event)">★</a>1
+                            <a href="#" class="star" onclick="setEaseOfUseRating(2, event)">★</a>2
+                            <a href="#" class="star" onclick="setEaseOfUseRating(3, event)">★</a>3
+                            <a href="#" class="star" onclick="setEaseOfUseRating(4, event)">★</a>4
+                            <a href="#" class="star" onclick="setEaseOfUseRating(5, event)">★</a>5
+                        </div>
+                    </div>
+                    
+                </form>
+
+                <!-- Show ratings section only when a response is provided -->
+                {% if response %}
+                    <script>
+                        document.getElementById('rating-section').style.display = 'block';
+                    </script>
+                {% endif %}
+            </div>
+        {% endif %}
+    </main>
+
+    <!-- Chat history goes here -->
+    <div id="chat-history"></div>
+    
+
+
+
+    <!-- JavaScript and AJAX code here -->
+    <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+    <script type="text/javascript" src="{{ url_for('static', filename='script.js') }}"></script>
+    <script type="text/javascript" src="{{ url_for('static', filename='chatbot.js') }}"></script>
+    <script type="text/javascript" src="{{ url_for('static', filename='rating.js') }}"></script>
+    <script>
+        function acknowledgeConsent() {
+            $.ajax({
+                type: "POST",
+                url: "https://cyberpro-technologies.com/consent",
+                success: function(data) {
+                    if (data.status === "success") {
+                        location.reload();
+                    }
+                }
+            });
+        }
+
+        function downloadTranscript() {
+                // Disable the buttons during the request
+                $("#ask_button, #download_button").prop("disabled", true);
+
+                $.ajax({
+                    type: "POST",
+                    url: "https://cyberpro-technologies.com/download",
+                    responseType: 'arraybuffer',  // Set the response type
+                    success: function (data) {
+                        var blob = new Blob([data], { type: 'application/pdf' });
+                        var link = document.createElement('a');
+                        link.href = window.URL.createObjectURL(blob);
+                        document.body.appendChild(link);
+                        link.click();
+                        document.body.removeChild(link);
+                    },
+                    complete: function () {
+                        // Re-enable the buttons after the request is complete
+                        $("#ask_button, #download_button").prop("disabled", false);
+                    }
+                });
+            }
+
+
+        // Function to handle showing ratings based on the response
+    function showRatings(response) {
+        // Show the ratings section only when a response is provided
+        if (response.trim() !== '') {
+            $("#rating-section").show();
+        } else {
+            // Hide the ratings section if no response is provided
+            $("#rating-section").hide();
+        }
+    }
+
+    // Execute this when the page loads
+    $(document).ready(function() {
+        // Get the initial response and show/hide ratings accordingly
+        var initialResponse = $("#response").text();
+        showRatings(initialResponse);
+    });
+
+        
+
+        
+    </script>
+</body>
+</html>
