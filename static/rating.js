@@ -45,7 +45,7 @@ function setRating(rating, event) {
         visit_id: visitId
     };
 
-    fetch('https://msc-dissertation-fb07ddee9299.herokuapp.com/submit_rating', {
+    fetch('https://cyberpro-technologies.com/submit_rating', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
@@ -116,7 +116,7 @@ function submitEaseOfUseRating(ease_rating) {
     };
 
     // Submit the rating asynchronously
-    fetch('https://msc-dissertation-fb07ddee9299.herokuapp.com/submit_ease_of_use_rating', {
+    fetch('https://cyberpro-technologies.com/submit_ease_of_use_rating', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',

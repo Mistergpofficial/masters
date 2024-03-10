@@ -2,7 +2,7 @@
 function fetchConversationHistory() {
     $.ajax({
         type: "GET",
-        url: "https://msc-dissertation-fb07ddee9299.herokuapp.com/get_history",
+        url: "https://cyberpro-technologies.com/get_history",
         success: function(response) {
             var chatHistoryDiv = $('#chat-history');
 

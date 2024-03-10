@@ -26,7 +26,7 @@
 
          $.ajax({
              type: "POST",
-             url: "https://msc-dissertation-fb07ddee9299.herokuapp.com/ask",
+             url: "https://cyberpro-technologies.com/ask",
              contentType: "application/json",
              data: JSON.stringify({ query_text: queryText }),
              success: function(data) {
