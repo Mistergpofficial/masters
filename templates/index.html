@@ -36,8 +36,6 @@
             <div id="chatbot-section">
                 <h2>You have agreed to participate. You can now interact with the chatbot.</h2>
                 <!-- display the knowledgebase status -->
-                {{ os.getenv("openai_api_key") }}
-                <p>Openai{{ openai }}</p>
                 <p>Knowledgebase Status: {{ session['knowledgebase_status'] }}</p>
 
                 {% with messages = get_flashed_messages(with_categories=true) %}
@@ -53,7 +51,6 @@
                 <!-- chatbot form here -->
                 <form id="chatbot-form">
                     <label for="query_text">Question:</label>
-                    <p>Openai{{ openai }}</p>
                     <textarea id="query_text" name="query_text" placeholder="Type your question here..." rows="4"></textarea>
                     <br>
                     <button type="button" id="ask_button" onclick="askChatbot()">Ask Chatbot</button>

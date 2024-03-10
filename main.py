@@ -172,7 +172,7 @@ def index():
         flask_session['question_id'] = str(uuid.uuid4())
 
 
-    return render_template('index.html', session=flask_session, conversation_history=flask_session['conversation_history'], openai=os.getenv("openai_api_key"))
+    return render_template('index.html', session=flask_session, conversation_history=flask_session['conversation_history'])
 
 
 
