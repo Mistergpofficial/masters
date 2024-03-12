@@ -4,7 +4,7 @@ import openai
 import os
 from dotenv import load_dotenv
 #from dotenv import dotenv_values
-from PyPDF2 import PdfFileReader, PdfFileWriter
+from PyPDF2 import PdfReader
 from flask_session import Session
 from pathlib import Path
 import fitz
@@ -116,31 +116,35 @@ def needs_update(folder_path, knowledge_base_folder="knowledgebase", knowledge_b
 
 # Function to combine PDF documents into a single PDF(our knowledgebase document)
 def combine_pdfs(folder_path, knowledge_base_folder="knowledgebase", output_filename="knowledge_base.pdf"):
-    pdf_writer = PdfFileWriter()
+    pdf = FPDF()
 
     for file_name in os.listdir(folder_path):
         if file_name.endswith(".pdf"):
             file_path = os.path.join(folder_path, file_name)
-            with open(file_path, 'rb') as pdf_file:
-                pdf_reader = PdfFileReader(pdf_file)
-                for page_num in range(pdf_reader.getNumPages()):
-                    page = pdf_reader.getPage(page_num)
-                    pdf_writer.addPage(page)
+            pdf_document = fitz.open(file_path)
+
+            for page_num in range(pdf_document.page_count):
+                page = pdf_document.load_page(page_num)
+                pdf.add_page()
+                pdf.set_font("Arial", size=12)
+
+                text = page.get_text("text")
+                pdf.multi_cell(0, 10, txt=text.encode("latin-1", "replace").decode("latin-1"))
+
+            pdf_document.close()
 
     knowledge_base_path = os.path.join(knowledge_base_folder, output_filename)
-    with open(knowledge_base_path, 'wb') as output_pdf:
-        pdf_writer.write(output_pdf)
-
+    pdf.output(knowledge_base_path)
     return f"Knowledge base PDF created/updated as {knowledge_base_path}"
-
 
 # Main Application for User
 @app.route('/')
 def index():
-    knowledgebase_folder = "knowledgebase"
         # Initialize Flask session with messages and conversation history
     flask_session['messages'] = [{"role": "system", "content": "You are a professional Question and Answer AI Assistant helping with information in regards to HR Policy documents and FAQ."}]
     flask_session['conversation_history'] = []
+
+    os.makedirs(knowledgebase_folder, exist_ok=True)
 
     if not os.listdir(knowledgebase_folder):
         combine_pdfs("uploaded_documents", knowledgebase_folder)
