@@ -139,7 +139,7 @@ def combine_pdfs(folder_path, knowledge_base_folder="knowledgebase", output_file
 # Main Application for User
 @app.route('/')
 def index():
-    knowledgebase_folder = "knowledgebase"
+    #knowledgebase_folder = "knowledgebase"
         # Initialize Flask session with messages and conversation history
     flask_session['messages'] = [{"role": "system", "content": "You are a professional Question and Answer AI Assistant helping with information in regards to HR Policy documents and FAQ."}]
     flask_session['conversation_history'] = []
