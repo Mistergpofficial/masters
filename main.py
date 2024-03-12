@@ -2,7 +2,8 @@ from flask import Flask, render_template, request, jsonify, flash, send_file, se
 from werkzeug.utils import secure_filename
 import openai
 import os
-from dotenv import load_dotenv
+#from dotenv import load_dotenv
+from dotenv import dotenv_values
 from PyPDF2 import PdfReader
 from flask_session import Session
 from pathlib import Path
@@ -19,7 +20,7 @@ import logging
 logging.basicConfig(level=logging.DEBUG)
 
 # Load environment variables from the .env file
-load_dotenv()
+conf = dotenv_values(".env")
 
 app = Flask(__name__)
 
@@ -33,7 +34,7 @@ app.secret_key = strong_secret_key
 app.config['SESSION_TYPE'] = 'filesystem'
 Session(app)
 
-api_key = os.environ.get("openai_api_key")
+api_key = conf["openai_api_key"]
 print(api_key)
 
 app.config['UPLOAD_FOLDER'] = 'uploaded_documents'
@@ -55,11 +56,11 @@ def allowed_file(filename):
 # Initialize MySQL connection
 def create_db_connection():
     return mysql.connector.connect(
-        host=os.environ.get("MYSQLHOST"),
-        user=os.environ.get("MYSQLUSER"),
-        port=os.environ.get("MYSQLPORT"),
-        password=os.environ.get("MYSQLPASSWORD"),
-        database=os.environ.get("MYSQLDATABASE")
+        host=conf["MYSQLHOST"],
+        user=conf["MYSQLUSER"],
+        port=conf["MYSQLPORT"],
+        password=conf["MYSQLPASSWORD"],
+        database=conf["MYSQLDATABASE"]
     )
 
 
