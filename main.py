@@ -38,7 +38,6 @@ api_key = os.environ.get("openai_api_key")
 print(api_key)
 
 app.config['UPLOAD_FOLDER'] = 'uploaded_documents'
-
 app.config['ALLOWED_EXTENSIONS'] = {'pdf'}
 
 # I'm Creating the upload folder(where the policy document and FAQ is stored) if it doesn't exist
@@ -140,11 +139,10 @@ def combine_pdfs(folder_path, knowledge_base_folder="knowledgebase", output_file
 # Main Application for User
 @app.route('/')
 def index():
+    knowledgebase_folder = "knowledgebase"
         # Initialize Flask session with messages and conversation history
     flask_session['messages'] = [{"role": "system", "content": "You are a professional Question and Answer AI Assistant helping with information in regards to HR Policy documents and FAQ."}]
     flask_session['conversation_history'] = []
-
-    os.makedirs(knowledgebase_folder, exist_ok=True)
 
     if not os.listdir(knowledgebase_folder):
         combine_pdfs("uploaded_documents", knowledgebase_folder)
@@ -175,7 +173,7 @@ def index():
         flask_session['question_id'] = str(uuid.uuid4())
 
 
-    return render_template('index.html', session=flask_session, conversation_history=flask_session['conversation_history'], openaikey=api_key)
+    return render_template('index.html', session=flask_session, conversation_history=flask_session['conversation_history'])
 
 
 

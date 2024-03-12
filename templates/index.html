@@ -37,7 +37,6 @@
                 <h2>You have agreed to participate. You can now interact with the chatbot.</h2>
                 <!-- display the knowledgebase status -->
                 <p>Knowledgebase Status: {{ session['knowledgebase_status'] }}</p>
-MY KEY{{ openaikey }}
                 {% with messages = get_flashed_messages(with_categories=true) %}
                     {% if messages %}
                         {% for category, message in messages %}
