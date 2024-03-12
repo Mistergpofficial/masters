@@ -2,7 +2,7 @@ from flask import Flask, render_template, request, jsonify, flash, send_file, se
 from werkzeug.utils import secure_filename
 import openai
 import os
-#from dotenv import load_dotenv
+from dotenv import load_dotenv
 #from dotenv import dotenv_values
 from PyPDF2 import PdfReader
 from flask_session import Session
@@ -19,8 +19,9 @@ import logging
 # Set up logging configuration (add this before your route)
 logging.basicConfig(level=logging.DEBUG)
 
-# Load environment variables from the .env file
-#conf = dotenv_values(".env")
+# Load environment variables from .env file
+dotenv_path = os.path.join(os.path.dirname(__file__), '.env')
+load_dotenv(dotenv_path)
 
 app = Flask(__name__)
 
