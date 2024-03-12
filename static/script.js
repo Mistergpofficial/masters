@@ -5,6 +5,7 @@ function fetchConversationHistory() {
         url: "https://cyberpro-technologies.com/get_history",
         success: function(response) {
             var chatHistoryDiv = $('#chat-history');
+            var heading = $('#conversation-heading');
 
             // Clear the existing content
             chatHistoryDiv.empty();
@@ -15,11 +16,13 @@ function fetchConversationHistory() {
                     // We append the conversation history entries to the div
                     chatHistoryDiv.append(`<p>${entry.role}: ${entry.content}</p>`);
                 });
-                // We show the chat history div
+                // We show the chat history div and the heading
                 chatHistoryDiv.show();
+                heading.show();
             } else {
-                // We hide the chat history div if there is no history
+                // We hide the chat history div and the heading if there is no history
                 chatHistoryDiv.hide();
+                heading.hide();
             }
         },
         error: function(error) {
@@ -30,8 +33,11 @@ function fetchConversationHistory() {
 
 // We execute this when the page loads
 $(document).ready(function() {
-    // Initially hide the chat history div
-    $('#chat-history').hide();
+    // Initially hide the chat history div and the heading
+    $('#chat-history, #conversation-heading').hide();
+
+    // Add the conversation history heading
+    $('body').prepend('<h1 id="conversation-heading">Conversation History</h1>');
 
     // We periodically update the conversation history (e.g., every 5 seconds)
     setInterval(fetchConversationHistory, 5000);
