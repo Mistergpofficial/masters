@@ -4,7 +4,7 @@ import openai
 import os
 from dotenv import load_dotenv
 #from dotenv import dotenv_values
-from PyPDF2 import PdfReader
+from PyPDF2 import PdfFileReader, PdfFileWriter
 from flask_session import Session
 from pathlib import Path
 import fitz
@@ -38,6 +38,7 @@ api_key = os.environ.get("openai_api_key")
 print(api_key)
 
 app.config['UPLOAD_FOLDER'] = 'uploaded_documents'
+
 app.config['ALLOWED_EXTENSIONS'] = {'pdf'}
 
 # I'm Creating the upload folder(where the policy document and FAQ is stored) if it doesn't exist
@@ -115,26 +116,23 @@ def needs_update(folder_path, knowledge_base_folder="knowledgebase", knowledge_b
 
 # Function to combine PDF documents into a single PDF(our knowledgebase document)
 def combine_pdfs(folder_path, knowledge_base_folder="knowledgebase", output_filename="knowledge_base.pdf"):
-    pdf = FPDF()
+    pdf_writer = PdfFileWriter()
 
     for file_name in os.listdir(folder_path):
         if file_name.endswith(".pdf"):
             file_path = os.path.join(folder_path, file_name)
-            pdf_document = fitz.open(file_path)
-
-            for page_num in range(pdf_document.page_count):
-                page = pdf_document.load_page(page_num)
-                pdf.add_page()
-                pdf.set_font("Arial", size=12)
-
-                text = page.get_text("text")
-                pdf.multi_cell(0, 10, txt=text.encode("latin-1", "replace").decode("latin-1"))
-
-            pdf_document.close()
+            with open(file_path, 'rb') as pdf_file:
+                pdf_reader = PdfFileReader(pdf_file)
+                for page_num in range(pdf_reader.getNumPages()):
+                    page = pdf_reader.getPage(page_num)
+                    pdf_writer.addPage(page)
 
     knowledge_base_path = os.path.join(knowledge_base_folder, output_filename)
-    pdf.output(knowledge_base_path)
+    with open(knowledge_base_path, 'wb') as output_pdf:
+        pdf_writer.write(output_pdf)
+
     return f"Knowledge base PDF created/updated as {knowledge_base_path}"
+
 
 # Main Application for User
 @app.route('/')
