@@ -10,10 +10,12 @@ document.addEventListener('keydown', resetInactivityTimer);
 
 
 // Add event listener for the alternative button to trigger ease of use rating
-document.getElementById('easeOfUseButton').addEventListener('click', function() {
+document.getElementById('easeOfUseButton').addEventListener('click', function(event) {
+    event.preventDefault();
     document.getElementById('rating-section').style.display = 'none';
     document.getElementById('ease-of-use-section').style.display = 'block';
 });
+
 
 // Function to start the 5 minutes inactivity timer
 function startInactivityTimer() {
