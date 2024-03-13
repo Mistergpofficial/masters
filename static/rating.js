@@ -8,6 +8,13 @@ document.addEventListener('DOMContentLoaded', startInactivityTimer);
 document.addEventListener('mousemove', resetInactivityTimer);
 document.addEventListener('keydown', resetInactivityTimer);
 
+
+// Add event listener for the alternative button to trigger ease of use rating
+document.getElementById('easeOfUseButton').addEventListener('click', function() {
+    document.getElementById('rating-section').style.display = 'none';
+    document.getElementById('ease-of-use-section').style.display = 'block';
+});
+
 // Function to start the 5 minutes inactivity timer
 function startInactivityTimer() {
     inactivityTimer = setTimeout(function () {
@@ -69,7 +76,7 @@ function setRating(rating, event) {
     });
 }
 
-// Checking if 1 minute has passed
+// Checking if 5 minute has passed
 var fiveMinutesPassed = false;
 
 // Variable to store the timeout ID
