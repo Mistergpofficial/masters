@@ -15,6 +15,7 @@ import uuid
 import mysql.connector
 import secrets
 import logging
+import time
 
 # Set up logging configuration (add this before your route)
 logging.basicConfig(level=logging.DEBUG)
@@ -219,7 +220,13 @@ def ask():
     if not api_key:
         return jsonify({"status": "error", "message": "OpenAI API key not found."})
 
+    # Track response time
+    start_time = time.time()  # Capture the start time
+
     response_text = chatbot(api_key, flask_session.get('messages', []), query_text, file_data_list)
+
+    end_time = time.time()  # Capture the end time
+    response_time = end_time - start_time  # Calculate the response time
 
     # Update the conversation history
     flask_session['conversation_history'].append({"role": "user", "content": query_text})
@@ -238,13 +245,12 @@ def ask():
     cursor = connection.cursor()
 
     # Assuming you have an 'evaluations' table with columns 'effectiveness_rating', 'visit_id', and 'timestamp'
-    sql = "INSERT INTO evaluations (visit_id, question_id, timestamp) VALUES (%s, %s, %s)"
-    cursor.execute(sql, (visit_id, str(uuid.uuid4()), timestamp))
+    sql = "INSERT INTO evaluations (visit_id, question_id, response_time, timestamp) VALUES (%s, %s, %s, %s)"
+    cursor.execute(sql, (visit_id, str(uuid.uuid4()), response_time, timestamp))
 
     # Get the last inserted question_id using cursor.lastrowid
     last_inserted_id = cursor.lastrowid
-    print(last_inserted_id)
-    print(visit_id)
+
 
     connection.commit()
     cursor.close()
