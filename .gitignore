@@ -8,3 +8,4 @@
 /training.jsonl
 /validation.jsonl
 /envvals
+.env
