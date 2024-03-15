@@ -467,6 +467,3 @@ if __name__ == "__main__":
         print("Knowledgebase folder is not empty. No need to update.")
 
     app.run(debug=True, host='0.0.0.0')
-
-
-  

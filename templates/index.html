@@ -7,10 +7,28 @@
     <title>AI POWERED CHATBOT</title>
     <!-- Link to external CSS file -->
     <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='styles.css') }}">
+    <style>
+        /* CSS for header and logo */
+        header {
+            display: flex;
+            align-items: center; 
+        }
+
+        header img {
+            margin-right: 10px; 
+            width: 100px; 
+            height: auto; 
+        }
+
+        header h1 {
+            margin: 0; 
+        }
+    </style>
 </head>
 
 <body>
     <header>
+        <img src="../static/images/logo.png" alt="Logo" width="100" height="100">
         <h1>AI POWERED CHATBOT</h1>
     </header>
 
@@ -127,7 +145,7 @@
         function acknowledgeConsent() {
             $.ajax({
                 type: "POST",
-                url: "https://cyberpro-technologies.com/consent",
+                url: "/consent",
                 success: function(data) {
                     if (data.status === "success") {
                         location.reload();
@@ -142,7 +160,7 @@
 
                 $.ajax({
                     type: "POST",
-                    url: "https://cyberpro-technologies.com/download",
+                    url: "/download",
                     responseType: 'arraybuffer',  // Set the response type
                     success: function (data) {
                         var blob = new Blob([data], { type: 'application/pdf' });
