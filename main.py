@@ -457,13 +457,13 @@ def upload_document():
 
 
 if __name__ == "__main__":
-    # knowledgebase_folder = "knowledgebase"
-    # os.makedirs(knowledgebase_folder, exist_ok=True)
+    knowledgebase_folder = "knowledgebase"
+    os.makedirs(knowledgebase_folder, exist_ok=True)
 
-    # if not os.listdir(knowledgebase_folder):
-    #     print("Knowledgebase folder is empty. Combining PDFs...")
-    #     combine_pdfs("uploaded_documents", knowledgebase_folder)
-    # else:
-    #     print("Knowledgebase folder is not empty. No need to update.")
+    if not os.listdir(knowledgebase_folder):
+        print("Knowledgebase folder is empty. Combining PDFs...")
+        combine_pdfs("uploaded_documents", knowledgebase_folder)
+    else:
+        print("Knowledgebase folder is not empty. No need to update.")
 
     app.run(debug=True, host='0.0.0.0')
