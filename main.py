@@ -38,7 +38,7 @@ Session(app)
 api_key = os.environ.get("openai_api_key")
 print(api_key)
 
-knowledgebase_folder = "knowledgebase"
+
 app.config['UPLOAD_FOLDER'] = 'uploaded_documents'
 app.config['ALLOWED_EXTENSIONS'] = {'pdf'}
 
@@ -145,6 +145,7 @@ def index():
     flask_session['messages'] = [{"role": "system", "content": "You are a professional Question and Answer AI Assistant helping with information in regards to HR Policy documents and FAQ."}]
     flask_session['conversation_history'] = []
 
+    knowledgebase_folder = "knowledgebase"
     if not os.listdir(knowledgebase_folder):
         combine_pdfs("uploaded_documents", knowledgebase_folder)
         flask_session['knowledgebase_status'] = "Knowledgebase updated"
@@ -456,6 +457,7 @@ def upload_document():
 
 
 if __name__ == "__main__":
+    knowledgebase_folder = "knowledgebase"
     os.makedirs(knowledgebase_folder, exist_ok=True)
 
     if not os.listdir(knowledgebase_folder):
