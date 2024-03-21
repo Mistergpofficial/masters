@@ -464,18 +464,6 @@ def upload_document():
 
 if __name__ == "__main__":
 
-    knowledgebase_folder = "knowledgebase"
-    # Check if the knowledgebase folder exists
-    if not os.path.exists(knowledgebase_folder):
-        # If the knowledgebase folder doesn't exist, create it
-        os.makedirs(knowledgebase_folder)
-
-    # Check if the knowledgebase folder is empty
-
-    if not os.listdir(knowledgebase_folder):
-        print("Knowledgebase folder is empty. Combining PDFs...")
-        combine_pdfs("uploaded_documents", knowledgebase_folder)
-    else:
-        print("Knowledgebase folder is not empty. No need to update.")
+  
 
     app.run(debug=True, host='0.0.0.0')
