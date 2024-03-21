@@ -145,7 +145,7 @@
         function acknowledgeConsent() {
             $.ajax({
                 type: "POST",
-                url: "/consent",
+                url: "https://cyberpro-technologies.com/consent",
                 success: function(data) {
                     if (data.status === "success") {
                         location.reload();
@@ -160,7 +160,7 @@
 
                 $.ajax({
                     type: "POST",
-                    url: "/download",
+                    url: "https://cyberpro-technologies.com/download",
                     responseType: 'arraybuffer',  // Set the response type
                     success: function (data) {
                         var blob = new Blob([data], { type: 'application/pdf' });

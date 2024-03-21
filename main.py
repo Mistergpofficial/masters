@@ -38,7 +38,7 @@ Session(app)
 api_key = os.environ.get("openai_api_key")
 
 
-knowledgebase_folder = "knowledgebase"
+#knowledgebase_folder = "knowledgebase"
 app.config['UPLOAD_FOLDER'] = 'uploaded_documents'
 app.config['ALLOWED_EXTENSIONS'] = {'pdf'}
 
@@ -141,7 +141,7 @@ def combine_pdfs(folder_path, knowledge_base_folder="knowledgebase", output_file
 # Main Application for User
 @app.route('/')
 def index():
-    #knowledgebase_folder = "knowledgebase"
+    knowledgebase_folder = "knowledgebase"
         # Initialize Flask session with messages and conversation history
     flask_session['messages'] = [{"role": "system", "content": "You are a professional Question and Answer AI Assistant helping with information in regards to HR Policy documents and FAQ."}]
     flask_session['conversation_history'] = []
@@ -457,13 +457,13 @@ def upload_document():
 
 
 if __name__ == "__main__":
-    
-    os.makedirs(knowledgebase_folder, exist_ok=True)
+    # knowledgebase_folder = "knowledgebase"
+    # os.makedirs(knowledgebase_folder, exist_ok=True)
 
-    if not os.listdir(knowledgebase_folder):
-        print("Knowledgebase folder is empty. Combining PDFs...")
-        combine_pdfs("uploaded_documents", knowledgebase_folder)
-    else:
-        print("Knowledgebase folder is not empty. No need to update.")
+    # if not os.listdir(knowledgebase_folder):
+    #     print("Knowledgebase folder is empty. Combining PDFs...")
+    #     combine_pdfs("uploaded_documents", knowledgebase_folder)
+    # else:
+    #     print("Knowledgebase folder is not empty. No need to update.")
 
     app.run(debug=True, host='0.0.0.0')
