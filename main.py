@@ -36,7 +36,7 @@ app.config['SESSION_TYPE'] = 'filesystem'
 Session(app)
 
 api_key = os.environ.get("openai_api_key")
-print(api_key)
+
 
 #knowledgebase_folder = "knowledgebase"
 app.config['UPLOAD_FOLDER'] = 'uploaded_documents'
@@ -147,7 +147,7 @@ def index():
     flask_session['conversation_history'] = []
 
     if not os.listdir(knowledgebase_folder):
-        combine_pdfs(app.config['UPLOAD_FOLDER'], knowledgebase_folder)
+        combine_pdfs("uploaded_documents", knowledgebase_folder)
         flask_session['knowledgebase_status'] = "Knowledgebase updated"
     else:
         flask_session['knowledgebase_status'] = "Knowledgebase up to date"
@@ -462,7 +462,7 @@ if __name__ == "__main__":
 
     if not os.listdir(knowledgebase_folder):
         print("Knowledgebase folder is empty. Combining PDFs...")
-        combine_pdfs(app.config['UPLOAD_FOLDER'], knowledgebase_folder)
+        combine_pdfs("uploaded_documents", knowledgebase_folder)
     else:
         print("Knowledgebase folder is not empty. No need to update.")
 
