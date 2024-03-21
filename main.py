@@ -36,7 +36,7 @@ app.config['SESSION_TYPE'] = 'filesystem'
 Session(app)
 
 api_key = os.environ.get("openai_api_key")
-
+print(api_key)
 
 #knowledgebase_folder = "knowledgebase"
 app.config['UPLOAD_FOLDER'] = 'uploaded_documents'
