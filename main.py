@@ -6,7 +6,6 @@ from dotenv import load_dotenv
 #from dotenv import dotenv_values
 from PyPDF2 import PdfReader
 from flask_session import Session
-from pathlib import Path
 import fitz
 import re
 from fpdf import FPDF
@@ -14,14 +13,9 @@ from datetime import datetime
 import uuid
 import mysql.connector
 import secrets
-import logging
 import time
 
-# Set up logging configuration (add this before your route)
-logging.basicConfig(level=logging.DEBUG)
 
-# Load environment variables from .env file
-load_dotenv()
 
 app = Flask(__name__)
 
@@ -36,7 +30,6 @@ app.config['SESSION_TYPE'] = 'filesystem'
 Session(app)
 
 api_key = os.environ.get("openai_api_key")
-print(api_key)
 
 
 app.config['UPLOAD_FOLDER'] = 'uploaded_documents'
