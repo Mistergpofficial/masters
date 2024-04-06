@@ -243,7 +243,6 @@ def ask():
     connection = create_db_connection()
     cursor = connection.cursor()
 
-    # Assuming you have an 'evaluations' table with columns 'effectiveness_rating', 'visit_id', and 'timestamp'
     sql = "INSERT INTO evaluations (visit_id, question_id, response_time, timestamp) VALUES (%s, %s, %s, %s)"
     cursor.execute(sql, (visit_id, str(uuid.uuid4()), response_time, timestamp))
 
@@ -267,7 +266,7 @@ def ask():
 @app.route('/submit_rating', methods=['POST'])
 def submit_rating():
     data = request.get_json()
-    effectiveness_rating = data.get('rating')
+    response_accuracy = data.get('rating')
 
      # Retrieve visit ID from the session
     visit_id = data.get('visit_id')
@@ -280,8 +279,6 @@ def submit_rating():
     # Ensure 'ratings' key is initialized in the session
     flask_session.setdefault('ratings', {})
 
-    # Update the effectiveness rating for the specified question_id in the evaluations table
-    # Replace the following code with your database logic
     connection = create_db_connection()
     cursor = connection.cursor()
 
@@ -293,8 +290,8 @@ def submit_rating():
 
         if count > 0:
             # Update the existing record
-            sql_update_rating = "UPDATE evaluations SET effectiveness_rating = %s WHERE id = %s AND visit_id = %s"
-            cursor.execute(sql_update_rating, (effectiveness_rating, last_inserted_id, visit_id))
+            sql_update_rating = "UPDATE evaluations SET response_accuracy = %s WHERE id = %s AND visit_id = %s"
+            cursor.execute(sql_update_rating, (response_accuracy, last_inserted_id, visit_id))
             connection.commit()
 
             # Mark the question as rated in the session
@@ -347,8 +344,6 @@ def submit_ease_of_use_rating():
     # Ensure 'ratings' key is initialized in the session
     flask_session.setdefault('easeratings', {})
 
-    # Update the effectiveness rating for the specified question_id in the evaluations table
-    # Replace the following code with your database logic
     connection = create_db_connection()
     cursor = connection.cursor()
 
