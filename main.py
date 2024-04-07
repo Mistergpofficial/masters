@@ -2,8 +2,6 @@ from flask import Flask, render_template, request, jsonify, flash, send_file, se
 from werkzeug.utils import secure_filename
 import openai
 import os
-from dotenv import load_dotenv
-#from dotenv import dotenv_values
 from PyPDF2 import PdfReader
 from flask_session import Session
 import fitz
@@ -19,10 +17,10 @@ import time
 
 app = Flask(__name__)
 
-# Generate a random 32-byte key and convert it to a string
+# generate a random 32-byte key
 strong_secret_key = secrets.token_hex(32)
 
-# Set the Flask app's secret key
+# Here I set the Flask app's secret key
 app.secret_key = strong_secret_key
 
 
@@ -39,7 +37,6 @@ app.config['ALLOWED_EXTENSIONS'] = {'pdf'}
 if not os.path.exists(app.config['UPLOAD_FOLDER']):
     os.makedirs(app.config['UPLOAD_FOLDER'])
 
-# Here I initialize session state
 app.config['UPLOADED_FILES'] = []
 
 # I'm checking if the file has a valid extension
@@ -134,14 +131,15 @@ def combine_pdfs(folder_path, knowledge_base_folder="knowledgebase", output_file
 # Main Application for User
 @app.route('/')
 def index():
-        # Initialize Flask session with messages and conversation history
+
+    # Initialize Flask session with messages and conversation history
     flask_session['messages'] = [{"role": "system", "content": "You are a professional Question and Answer AI Assistant helping with information in regards to HR Policy documents and FAQ."}]
     flask_session['conversation_history'] = []
 
     knowledgebase_folder = "knowledgebase"
     # Check if the knowledgebase folder exists
     if not os.path.exists(knowledgebase_folder):
-        # If the knowledgebase folder doesn't exist, create it
+    # If the knowledgebase folder doesn't exist, create it
         os.makedirs(knowledgebase_folder)
 
     # Check if the knowledgebase folder is empty
@@ -163,7 +161,7 @@ def index():
     if 'visit_id' not in flask_session:
         flask_session['visit_id'] = str(uuid.uuid4())
 
-    # Initialize a dictionary to track first ratings for each question
+    # Initialize a dictionary to track quality of answer ratings for each query
     flask_session.setdefault('ratings', {})
 
     # Initialize a dictionary to track ease of use ratings after session expires
@@ -220,12 +218,15 @@ def ask():
         return jsonify({"status": "error", "message": "OpenAI API key not found."})
 
     # Track response time
-    start_time = time.time()  # Capture the start time
+    start_time = time.time()  # Here I capture the start time
 
     response_text = chatbot(api_key, flask_session.get('messages', []), query_text, file_data_list)
 
-    end_time = time.time()  # Capture the end time
-    response_time = end_time - start_time  # Calculate the response time
+    # Here I capture the end time
+    end_time = time.time()  
+
+    # Calculate the response time
+    response_time = end_time - start_time  
 
     # Update the conversation history
     flask_session['conversation_history'].append({"role": "user", "content": query_text})
@@ -239,7 +240,6 @@ def ask():
         return jsonify({"status": "error", "message": "Visit ID or timestamp not provided."})
 
     # Store the rating, visit_id, and timestamp in the evaluations table
-    # You need to replace the following code with your database logic
     connection = create_db_connection()
     cursor = connection.cursor()
 
@@ -262,7 +262,7 @@ def ask():
 
 
 
-# Submit Rating
+# Submit Quality of Answer Received Rating
 @app.route('/submit_rating', methods=['POST'])
 def submit_rating():
     data = request.get_json()
@@ -322,7 +322,7 @@ def reset_session():
     # Update the visit_id in the session
     flask_session['visit_id'] = new_visit_id
 
-    # Respond with success message or new visit_id
+    # Response with success message and new visit_id
     return jsonify({"status": "success", "new_visit_id": new_visit_id})
 
 
@@ -337,7 +337,7 @@ def submit_ease_of_use_rating():
 
     last_inserted_id = data.get('last_inserted_id')
 
-      # Check if either 'visit_id' or 'current_question_id' is missing
+      # Check if either 'visit_id' or 'last_inserted_id' is missing
     if visit_id is None or last_inserted_id is None:
         return jsonify({"status": "error", "message": "Visit ID or current question ID not found in session."})
 
@@ -378,13 +378,15 @@ def submit_ease_of_use_rating():
 # Function to send conversation history in real-time
 @app.route('/get_history', methods=['GET'])
 def get_history():
+
     # Check if 'conversation_history' is present in the session
     if 'conversation_history' not in flask_session:
-        return jsonify([])  # Return an empty list if 'conversation_history' is not present
+        # Return an empty list if 'conversation_history' is not present
+        return jsonify([])  
 
     conversation_history = flask_session['conversation_history']
 
-    # Apply the condition to filter out user messages containing "PDF File Type"
+    # condition to filter out user messages containing "PDF File Type"
     filtered_history = [
         {"role": message["role"], "content": message["content"]}
         for message in conversation_history
@@ -395,6 +397,7 @@ def get_history():
 
 @app.route('/download_transcript', methods=['GET'])
 def download_transcript():
+
     # Check if 'messages' exists in the session
     if 'messages' not in flask_session:
         return jsonify({"status": "error", "message": "No messages found in the session."})
@@ -451,7 +454,5 @@ def upload_document():
 
 
 if __name__ == "__main__":
-
-  
 
     app.run(debug=True, host='0.0.0.0')
