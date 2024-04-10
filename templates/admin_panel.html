@@ -11,19 +11,20 @@
         /* CSS for header and logo */
         header {
             display: flex;
-            align-items: center; 
+            align-items: center;
+            justify-content: center; /* Center items horizontally */
             padding: 10px; /* Added padding for better spacing */
             background-color: #f0f0f0; /* Added a background color for better visibility */
         }
 
         header img {
-            margin-right: 10px; 
-            width: 100px; 
-            height: auto; 
+            margin-right: 10px;
+            width: 100px;
+            height: auto;
         }
 
         header h2 {
-            margin: 0; 
+            margin: 0;
         }
     </style>
 </head>
@@ -33,7 +34,7 @@
         <img src="../static/images/logo.png" alt="Logo" width="100" height="100">
         <h2>Welcome to the Admin Panel</h2>
     </header>
-    
+
     <form method="post" action="/admin/upload_document" enctype="multipart/form-data">
         <label for="file">Select Document(s): (Only .pdf file is accepted)</label>
         <input type="file" name="file" id="file" accept=".pdf" multiple required>
