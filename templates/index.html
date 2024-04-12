@@ -49,6 +49,7 @@
                 </ol>
                 <!-- consent form HTML here -->
                 <button onclick="acknowledgeConsent()">I acknowledge and agree to the terms</button>
+                <button onclick="declineConsent()">No, I do not wish to proceed</button>
             </div>
         {% else %}
             <div id="chatbot-section">
@@ -152,6 +153,11 @@
                     }
                 }
             });
+        }
+
+        function declineConsent() {
+            alert("You have declined to proceed. Thank you for considering!");
+            window.location.href = "consent-declined.html";
         }
 
         function downloadTranscript() {
