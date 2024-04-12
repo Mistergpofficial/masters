@@ -201,8 +201,6 @@ def ask():
     # Track response time
     start_time = time.time()  # Here I capture the start time
 
-    #response_text = chatbot(api_key, flask_session.get('messages', []), query_text, file_data_list)
-
      # I call the chatbot function with the combined prompts
     response_text = chatbot(api_key, flask_session.get('messages', []), prompts)
 
@@ -244,6 +242,7 @@ def ask():
     flask_session.setdefault('visit_id', visit_id)
 
     return jsonify({"response": response_text, "last_inserted_id": last_inserted_id, "visit_id": visit_id})
+
 
 # chatbot function to include the combined prompts
 def chatbot(api_key, messages, prompts):
