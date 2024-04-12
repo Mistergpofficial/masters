@@ -56,70 +56,6 @@ def create_db_connection():
     )
 
 
-# Chatbot Function
-# def chatbot(api_key, messages, query_text, file_data_list):
-#     openai.api_key = api_key
-#     if query_text:
-#         messages.append({"role": "user", "content": query_text})
-#     for file_data in file_data_list:
-#         messages.append({"role": "user", "content": f"PDF File Type: {file_data}"})
-#     chat = openai.ChatCompletion.create(
-#         model="gpt-3.5-turbo-0125", messages=messages, stream=True, temperature=0.5
-#     )
-
-#     response_line = ''.join(chunk['choices'][0]['delta'].get('content', '') for chunk in chat)
-#     response_line = clean_response(response_line)[:500]
-    
-#     response_text = f"Response: {response_line}"
-#     messages.append({"role": "assistant", "content": response_line})
-
-#     return response_text
-
-
-# Chatbot Function
-def chatbot(api_key, messages, query_text, file_data_list):
-    openai.api_key = api_key
-    if query_text:
-        messages.append({"role": "user", "content": query_text})
-    for file_data in file_data_list:
-        messages.append({"role": "user", "content": f"PDF File Type: {file_data}"})
-    chat = openai.ChatCompletion.create(
-        model="gpt-3.5-turbo-0125", messages=messages, stream=True, temperature=0.5
-    )
-
-    response_chunks = []
-    total_length = 0
-
-    for chunk in chat:
-        delta = chunk['choices'][0]['delta']
-        content = delta.get('content', '')
-        response_chunks.append(content)
-        total_length += len(content)
-
-        # Adjust this limit based on your requirements
-        if total_length >= 1000:
-            break
-
-    response_line = ''.join(response_chunks)
-    response_line = clean_response(response_line)[:1000]
-
-    response_text = f"Response: {response_line}"
-    messages.append({"role": "assistant", "content": response_line})
-
-    return response_text
-
-
-# Function to clean response and remove unnecessary information
-def clean_response(response):
-    response = response.strip()
-    response = re.sub(r'\s+', ' ', response)
-    response = re.sub(r'<.*?>', '', response)
-    response = re.sub(r'http[s]?://(?:[a-zA-Z]|[0-9]|[$-_@.&+]|[!*\\(\\),]|(?:%[0-9a-fA-F][0-9a-fA-F]))+', '', response)
-    response = ''.join(char for char in response if char.isprintable())
-    response = re.sub(r'([.,!?])\1+', r'\1', response)
-    return response
-
-
 # Function to check if the knowledge base PDF needs to be updated
 def needs_update(folder_path, knowledge_base_folder="knowledgebase", knowledge_base_filename="knowledge_base.pdf"):
     knowledge_base_path = os.path.join(knowledge_base_folder, knowledge_base_filename)
@@ -248,6 +184,13 @@ def ask():
         except Exception as e:
             flash(f"Error loading the document {selected_document}: {str(e)}", 'error')
 
+    # Prompt for GPT including user query and content from PDF documents
+    prompts = []
+    prompts.append(query_text)
+    for file_data in file_data_list:
+        prompts.append(file_data)
+
+
     # Generate a new question ID for each question if not present in the session
     if 'question_id' not in flask_session:
         flask_session['question_id'] = str(uuid.uuid4())
@@ -258,7 +201,11 @@ def ask():
     # Track response time
     start_time = time.time()  # Here I capture the start time
 
-    response_text = chatbot(api_key, flask_session.get('messages', []), query_text, file_data_list)
+    #response_text = chatbot(api_key, flask_session.get('messages', []), query_text, file_data_list)
+
+     # I call the chatbot function with the combined prompts
+    response_text = chatbot(api_key, flask_session.get('messages', []), prompts)
+
 
     # Here I capture the end time
     end_time = time.time()  
@@ -297,6 +244,48 @@ def ask():
     flask_session.setdefault('visit_id', visit_id)
 
     return jsonify({"response": response_text, "last_inserted_id": last_inserted_id, "visit_id": visit_id})
+
+# chatbot function to include the combined prompts
+def chatbot(api_key, messages, prompts):
+    openai.api_key = api_key
+    for prompt in prompts:
+        messages.append({"role": "user", "content": prompt})
+
+    # We use the combined prompts for GPT completion
+    chat = openai.ChatCompletion.create(
+        model="gpt-3.5-turbo-0125", messages=messages, stream=True, temperature=0.5
+    )
+
+    response_chunks = []
+    total_length = 0
+
+    for chunk in chat:
+        delta = chunk['choices'][0]['delta']
+        content = delta.get('content', '')
+        response_chunks.append(content)
+        total_length += len(content)
+
+        if total_length >= 1000:
+            break
+
+    response_line = ''.join(response_chunks)
+    response_line = clean_response(response_line)[:1000]
+
+    response_text = f"Response: {response_line}"
+    messages.append({"role": "assistant", "content": response_line})
+
+    return response_text
+
+
+# Function to clean response and remove unnecessary information
+def clean_response(response):
+    response = response.strip()
+    response = re.sub(r'\s+', ' ', response)
+    response = re.sub(r'<.*?>', '', response)
+    response = re.sub(r'http[s]?://(?:[a-zA-Z]|[0-9]|[$-_@.&+]|[!*\\(\\),]|(?:%[0-9a-fA-F][0-9a-fA-F]))+', '', response)
+    response = ''.join(char for char in response if char.isprintable())
+    response = re.sub(r'([.,!?])\1+', r'\1', response)
+    return response
 
 
 
