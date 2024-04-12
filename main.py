@@ -182,6 +182,10 @@ def acknowledge_consent():
     flask_session['consent_acknowledged'] = True
     return jsonify({"status": "success"})
 
+@app.route('/consent-declined')
+def consent_declined():
+    return render_template('consent-declined.html')
+
 # Ask the chatbot
 @app.route('/ask', methods=['POST'])
 def ask():
