@@ -57,6 +57,26 @@ def create_db_connection():
 
 
 # Chatbot Function
+# def chatbot(api_key, messages, query_text, file_data_list):
+#     openai.api_key = api_key
+#     if query_text:
+#         messages.append({"role": "user", "content": query_text})
+#     for file_data in file_data_list:
+#         messages.append({"role": "user", "content": f"PDF File Type: {file_data}"})
+#     chat = openai.ChatCompletion.create(
+#         model="gpt-3.5-turbo-0125", messages=messages, stream=True, temperature=0.5
+#     )
+
+#     response_line = ''.join(chunk['choices'][0]['delta'].get('content', '') for chunk in chat)
+#     response_line = clean_response(response_line)[:500]
+    
+#     response_text = f"Response: {response_line}"
+#     messages.append({"role": "assistant", "content": response_line})
+
+#     return response_text
+
+
+# Chatbot Function
 def chatbot(api_key, messages, query_text, file_data_list):
     openai.api_key = api_key
     if query_text:
@@ -67,13 +87,27 @@ def chatbot(api_key, messages, query_text, file_data_list):
         model="gpt-3.5-turbo-0125", messages=messages, stream=True, temperature=0.5
     )
 
-    response_line = ''.join(chunk['choices'][0]['delta'].get('content', '') for chunk in chat)
-    response_line = clean_response(response_line)[:500]
-    
+    response_chunks = []
+    total_length = 0
+
+    for chunk in chat:
+        delta = chunk['choices'][0]['delta']
+        content = delta.get('content', '')
+        response_chunks.append(content)
+        total_length += len(content)
+
+        # Adjust this limit based on your requirements
+        if total_length >= 1000:
+            break
+
+    response_line = ''.join(response_chunks)
+    response_line = clean_response(response_line)[:1000]
+
     response_text = f"Response: {response_line}"
     messages.append({"role": "assistant", "content": response_line})
 
     return response_text
+
 
 # Function to clean response and remove unnecessary information
 def clean_response(response):
