@@ -40,7 +40,7 @@ if not os.path.exists(app.config['UPLOAD_FOLDER']):
 app.config['UPLOADED_FILES'] = []
 
 # I'm checking if the file has a valid extension
-def allowed_file(filename):
+def accepted_file(filename):
     return '.' in filename and filename.rsplit('.', 1)[1].lower() in app.config['ALLOWED_EXTENSIONS']
 
 
@@ -469,7 +469,7 @@ def upload_document():
     files = request.files.getlist('file')
 
     for file in files:
-        if file and allowed_file(file.filename):
+        if file and accepted_file(file.filename):
             filename = secure_filename(file.filename)
             file_path = os.path.join(app.config['UPLOAD_FOLDER'], filename)
             file.save(file_path)
