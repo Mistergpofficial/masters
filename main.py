@@ -250,7 +250,7 @@ def chatbot(api_key, messages, prompts):
     for prompt in prompts:
         messages.append({"role": "user", "content": prompt})
 
-    # We use the combined prompts for GPT completion
+    # Here we use the combined prompts for GPT completion
     chat = openai.ChatCompletion.create(
         model="gpt-3.5-turbo-0125", messages=messages, stream=True, temperature=0.5
     )
@@ -264,11 +264,11 @@ def chatbot(api_key, messages, prompts):
         response_chunks.append(content)
         total_length += len(content)
 
-        if total_length >= 1000:
+        if total_length >= 5000:
             break
 
     response_line = ''.join(response_chunks)
-    response_line = clean_response(response_line)[:1000]
+    response_line = clean_response(response_line)[:5000]
 
     response_text = f"Response: {response_line}"
     messages.append({"role": "assistant", "content": response_line})
