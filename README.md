@@ -68,8 +68,17 @@ masters-main/
 
 ## 📸 Screenshots
 
-## Chatbot Interaction Screenshot
+## Chatbot Informed Consent 
 ![Chatbot Screenshot](https://github.com/Mistergpofficial/masters/blob/main/Screenshot%202025-07-29%20at%2023.17.38.png?raw=true)
+
+## Declined Informed Consent
+![Chatbot Screenshot](https://github.com/Mistergpofficial/masters/blob/main/Screenshot%202025-07-29%20at%2023.29.17.png?raw=true)
+
+## Chatbot Prompt One
+![Chatbot Screenshot](https://github.com/Mistergpofficial/masters/blob/main/Screenshot%202025-07-29%20at%2023.30.20.png?raw=true)
+
+## Chatbot Prompt Two
+![Chatbot Screenshot](https://github.com/Mistergpofficial/masters/blob/main/Screenshot%202025-07-29%20at%2023.31.52.png?raw=true)
 
 ## 📄 License
 
