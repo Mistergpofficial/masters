@@ -22,7 +22,7 @@ This project is an AI-driven chatbot designed to assist employees with retrievin
 ## 📁 Project Structure
 
 ```
-masters-main/
+masters/
 ├── main.py                    # Main Flask application
 ├── wsgi.py                    # WSGI entry point for deployment
 ├── requirements.txt           # Python dependencies
