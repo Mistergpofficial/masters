@@ -68,7 +68,8 @@ masters-main/
 
 ## 📸 Screenshots
 
-Refer to the appendix folder (if included) for screenshots showing sample chatbot interactions and database structure.
+## Chatbot Interaction Screenshot
+![Chatbot Screenshot](https://github.com/Mistergpofficial/masters/blob/main/Screenshot%202025-07-29%20at%2023.17.38.png?raw=true)
 
 ## 📄 License
 
