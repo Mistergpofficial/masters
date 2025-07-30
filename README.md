@@ -22,27 +22,28 @@ This is an AI-driven chatbot application built with Python (Flask) and OpenAI’
 ## 📁 Project Structure
 
 masters-main/
-├── main.py # Main Flask app
-├── wsgi.py # WSGI entry point
-├── requirements.txt # Python dependencies
-├── gunicorn_service.sh # Gunicorn startup script
-├── README.md # Project documentation
-├── .gitignore
-├── flask_session/ # Server-side session storage
-├── uploaded_documents/ # Uploaded document storage
+├── main.py                    # Main Flask application
+├── wsgi.py                    # WSGI entry point for deployment
+├── requirements.txt           # Python dependencies
+├── gunicorn_service.sh        # Gunicorn startup script
+├── .gitignore                 # Git ignored files
+├── README.md                  # Project documentation
+├── flask_session/             # Server-side session files
+├── uploaded_documents/        # Uploaded documents storage
 ├── static/
-│ ├── admin.css
-│ ├── chatbot.js
-│ ├── rating.js
-│ ├── script.js
-│ ├── styles.css
-│ ├── 404.html
-│ └── images/
-│ └── logo.png
+│   ├── admin.css              # Styles for admin panel
+│   ├── chatbot.js             # Chatbot interaction logic
+│   ├── rating.js              # Rating functionality
+│   ├── script.js              # Main site logic
+│   ├── styles.css             # General styling
+│   ├── 404.html               # Custom 404 error page
+│   └── images/
+│       └── logo.png           # Logo image
 ├── templates/
-│ ├── index.html
-│ ├── admin_panel.html
-│ └── consent-declined.html
+│   ├── index.html             # Chat interface
+│   ├── admin_panel.html       # Admin dashboard
+│   └── consent-declined.html # Fallback for no user consent
+
 
 
 ## 📦 Installation
